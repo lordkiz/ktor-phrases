@@ -11,6 +11,7 @@ import io.ktor.features.*
 import io.ktor.freemarker.*
 import io.ktor.gson.*
 import io.ktor.http.*
+import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
@@ -39,6 +40,8 @@ fun Application.module(testing: Boolean = false) {
         templateLoader = ClassTemplateLoader(this::class.java.classLoader, "templates")
     }
 
+    install(Locations)
+
     val db = InMemoryRepository()
 
     routing {
@@ -53,3 +56,6 @@ fun Application.module(testing: Boolean = false) {
 
 const val API_VERSION = "/api/v1"
 
+suspend fun ApplicationCall.redirect(location: Any) {
+    respondRedirect(application.locations.href(location))
+}
